@@ -1,60 +1,55 @@
-import { useState } from "react";
- 
-function App() {
-  const [tasks, setTasks] = useState([]);
-  const [text, setText] = useState("");
- 
-  const addTask = (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    setTasks([...tasks, { id: Date.now(), text, done: false }]);
-    setText("");
-  };
- 
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
-  };
- 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id));
-  };
- 
-  const startEdit = (id) => {
-    const value = prompt("Edit task:");
-    if (value !== null && value.trim()) {
-      setTasks(tasks.map(t => t.id === id ? { ...t, text: value } : t));
+import React, { useEffect, useState } from 'react';
+import { getAllPokemonList } from './api/pokemon';
+
+const App = () => {
+  const [pokemonData, setPokemonData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getAllPokemonList();
+      setPokemonData(data?.results || []);
     }
-  };
- 
+    fetchData();
+  }, []);
+
   return (
-    <div>
-      <h2>Task App</h2>
- 
-      <form onSubmit={addTask}>
-        <input 
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Add task"
-        />
-        <button>Add</button>
-      </form>
- 
-      <ul>
-        {tasks.map(task => (
-          <li key={task.id}>
-            <input 
-              type="checkbox" 
-              checked={task.done} 
-              onChange={() => toggleTask(task.id)} 
-            />
-            {task.text}
-            <button onClick={() => startEdit(task.id)}>Edit</button>
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+    <div
+      style={{
+        marginTop: '40px',
+        justifyContent: 'center',
+        display: 'flex',
+        flexWrap: 'wrap',
+        width: '90%',
+        margin: 'auto',
+      }}
+    >
+      {pokemonData.map((poke, i) => (
+        <div
+          key={`${poke.name}-${i}`}
+          style={{
+            width: '320px',
+            height: '380px',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            margin: '15px',
+            textAlign: 'center',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+          }}
+        >
+          <div style={{ padding: '10px' }}>
+            <p style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: '1.2rem' }}>
+              {poke.name}
+            </p>
+          </div>
+          <img
+            style={{ height: '250px', width: '250px', objectFit: 'contain' }}
+            alt={poke.name}
+            src={`https://img.pokemondb.net/artwork/large/${poke.name}.jpg`}
+          />
+        </div>
+      ))}
     </div>
   );
-}
- 
+};
+
 export default App;

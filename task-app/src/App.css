@@ -40,22 +40,3 @@
 .read-the-docs {
   color: #888;
 }
-
-.install-btn {
-  background-color: #2ecc71;
-  color: white;
-  margin-bottom: 20px;
-  font-weight: bold;
-  animation: pulse 2s infinite;
-}
-
-.install-btn:hover {
-  background-color: #27ae60;
-  border-color: #2ecc71;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
